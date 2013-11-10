@@ -1,0 +1,16 @@
+
+# make test_chol_blas3
+
+n=$1
+m=$2
+nblock=$3
+mblock=$4
+epsilon=$5
+
+test_chol_blas3 << EOF 1> out.chol_blas3.n_$n.m_$m.nblock_$nblock.mblock_$mblock.eps_$epsilon.$$ 2>&1
+$m
+$n
+$nblock
+$mblock
+$epsilon
+EOF

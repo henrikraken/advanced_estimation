@@ -1,0 +1,48 @@
+  
+ Cholesky BLAS2
+ Enter value for m (no max )
+ Enter value for n (max of         5000 )
+ m=          500   n=          100
+  Number of integers for random starting value =            2
+
+
+ Accumulation        : Ops = 5.000E+06  Time = 1.213E-01 sec  Speed = 4.122E+01 Mf
+  
+ htwh
+Row  1:  1.6E+04
+Row  2:  2.9E+02  1.7E+04
+Row  3: -4.5E+02  5.0E+02  1.6E+04
+Row  4:  2.8E+02 -4.6E+02  2.4E+02  1.6E+04
+Row  5: -6.0E+02  1.6E+03  1.4E+02  6.5E+02  1.7E+04
+Row  6:  6.3E+02 -1.3E+03 -2.0E+03  2.2E+02 -1.4E+03  1.6E+04
+Row  7:  2.2E+02 -1.3E+03 -8.4E+02  3.2E+02 -8.1E+02  2.1E+02  1.7E+04
+  
+ htwy
+  2.7E+05
+  2.6E+05
+ -1.6E+05
+  5.3E+05
+  5.3E+05
+ -5.5E+04
+ -2.8E+04
+
+
+ Cholesky BLAS2      : Ops = 3.333E+05  Time = 3.000E-04 sec  Speed = 1.111E+03 Mf
+  
+ L
+Row  1:  1.3E+02
+Row  2:  2.3E+00  1.3E+02
+Row  3: -3.6E+00  4.0E+00  1.3E+02
+Row  4:  2.2E+00 -3.6E+00  2.0E+00  1.3E+02
+Row  5: -4.8E+00  1.3E+01  5.5E-01  5.5E+00  1.3E+02
+Row  6:  5.0E+00 -1.0E+01 -1.5E+01  1.6E+00 -9.7E+00  1.2E+02
+Row  7:  1.7E+00 -1.0E+01 -6.2E+00  2.3E+00 -5.3E+00 -4.1E-01  1.3E+02
+
+
+ Magnitude of error in xhat=   8.68E-14
+
+
+
+ Total time= 1.263E-01   Cholesky BLAS2: time= 3.000E-04  Speed (Mflops)= 1.111E+03
+
+

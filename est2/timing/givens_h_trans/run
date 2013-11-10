@@ -1,0 +1,10 @@
+
+# make test_givens_h_trans
+
+n=$1
+m=$2
+
+test_givens_h_trans << EOF 1> out.givens_h_trans.n_$n.m_$m.$$ 2>&1
+$m
+$n
+EOF

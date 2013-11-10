@@ -1,0 +1,12 @@
+
+# make test_house_blas3
+
+n=$1
+m=$2
+nblock=$3
+
+test_house_blas3 << EOF 1> out.house_blas3.n_$n.m_$m.nblock_$nblock.$$ 2>&1
+$m
+$n
+$nblock
+EOF

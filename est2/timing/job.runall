@@ -1,0 +1,80 @@
+#!/bin/bash
+
+#$ -S /bin/bash
+#$ -N runall                  # Job name
+#$ -j n                         # stdout and stderr to different files
+#$ -o runall.out.$JOB_ID
+#$ -e runall.out.$JOB_ID
+#$ -V                           # Inherit the submission environment
+#$ -cwd                         # Start job in submission directory
+#$ -pe 12way 12                 # Running in normal queue seems to start sooner than running in serial queue.
+#$ -l h_rt=4:00:00
+#$ -q normal
+
+set -x
+
+JOBID=${JOB_ID}
+
+date
+
+
+# Set these block sizes to what you find are best.
+mblock=10
+nblock_chol_blas3=10
+nblock_house_blas3=10
+
+
+
+# Small case
+n_small=1800
+m_small=3600
+
+
+# Large case
+n_large=4000
+m_large=16000
+
+
+for count in 1 2 3
+do
+
+  echo count = $count
+  
+##################   Change when give this to students: no house_blas2_without.gemv
+# for case in chol_blas2 chol_blas3 givens givens_h_trans house_blas2 house_blas2_without.gemv house_blas3
+  for case in chol_blas2 chol_blas3 givens givens_h_trans house_blas2 house_blas3
+  do
+  
+    cd ${case}
+    
+    if [ "${case}" = "chol_blas3" ]
+    then
+
+      run ${n_small} ${m_small} ${nblock_chol_blas3} ${mblock}
+      run ${n_large} ${m_large} ${nblock_chol_blas3} ${mblock}
+
+    elif [ "${case}" = "house_blas3" ]
+    then
+
+      run ${n_small} ${m_small} ${nblock_house_blas3}
+      run ${n_large} ${m_large} ${nblock_house_blas3}
+
+    elif [ "${case}" = "givens" ]
+    then
+
+      run ${n_small} ${m_small}
+
+    else
+
+      run ${n_small} ${m_small}
+      run ${n_large} ${m_large}
+
+    fi
+
+    cd ..
+
+  done
+
+done
+
+date
