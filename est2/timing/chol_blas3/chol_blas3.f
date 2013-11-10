@@ -119,7 +119,7 @@
           call dtrsm( 'Right', 'Lower', 'Transpose', 'Non-unit',
      >                 a21_rows, a21_cols, 1.d0,
      >                 a(a11_start,a11_start), lda,
-     >                 a(a21_start_row,a21_start_col, lda )
+     >                 a(a21_start_row,a21_start_col), lda )
 
 *.........Calculate L22 * L22' using symmetric rank-k update.
 *         This overwrites A22.
