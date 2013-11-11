@@ -120,7 +120,7 @@
 
 *.....u
 
-      call dcopy( rows_v, v,1,u,1)
+      call dcopy( rows_v, v(1),1,u(1),1)
       u( 1 ) = u( 1 ) + sigma
 
 *.....beta
