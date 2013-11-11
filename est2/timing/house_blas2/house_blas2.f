@@ -43,8 +43,8 @@
 *.......rows = rows in lower right portion of h_y for this step.
 *.......columns = columns in lower right portion of h_y for this step.
 
-        rows = ldh - i
-        columns = n +1 - i
+        rows = ldh - i +1
+        columns = n +1 - i +1
 
 
 *.......Send this matrix into house_0.
