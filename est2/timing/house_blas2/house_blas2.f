@@ -43,8 +43,8 @@
 *.......rows = rows in lower right portion of h_y for this step.
 *.......columns = columns in lower right portion of h_y for this step.
 
-        rows = ------
-        columns = ------
+        rows = ldh - i
+        columns = n + 1 - i
 
 
 *.......Send this matrix into house_0.
@@ -112,7 +112,7 @@
 
 *.....Magnitude of v
 
-      mag_v = dnrm2 ( ---, ---, --- )
+      mag_v = dnrm2 (rows_v, v, 1 )
 
 *.....sigma
 
@@ -120,7 +120,7 @@
 
 *.....u
 
-      call dcopy( ---, ---, ---, ---, --- )
+      call dcopy( rows_v,v,1,u,1)
       u( 1 ) = u( 1 ) + sigma
 
 *.....beta
