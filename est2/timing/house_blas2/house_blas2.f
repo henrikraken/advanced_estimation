@@ -182,8 +182,8 @@
 *     and put it into the gamma vector, and we remember that represents
 *     a row vector.  More on this in the dger step below.
 
-      call dgemv( ---, ---, ---, ---, ---, ---, ---, ---,
-     >            ---, ---, --- )
+      call dgemv('Transpose', rows_B, cols_B, beta, B, ldB, u, 1,
+     >            0, gamma,1 )
 
 *.....Now calculate
 *
@@ -201,7 +201,7 @@
 *     to treat gamma like it is a column vector, and ask dger to
 *     calcluate B - u * gamma'.
 
-      call dger( ---, ---, ---, ---, ---, ---, ---, ---, --- )
+      call dger( rows_B, cols_B, -1.d0, u, 1, gamma, 1, B, ldB )
 
  1001 format ( 'Row ', i2, ':', 10f8.4, / (6x,10e8.4)  )
 
