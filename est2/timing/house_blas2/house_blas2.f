@@ -44,7 +44,7 @@
 *.......columns = columns in lower right portion of h_y for this step.
 
         rows = ldh - i
-        columns = n - i
+        columns = n +1 - i
 
 
 *.......Send this matrix into house_0.
