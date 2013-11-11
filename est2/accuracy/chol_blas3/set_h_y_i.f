@@ -81,7 +81,8 @@
 
 *.....Make col 1 of H equal to (epsilon)*(col 1) + ( 1-epsilon)*(col 2)
 
-        h_row(1) = epsilon * h_row(1) + ( 1.d0 - epsilon ) * h_row(2)
+        h_row(8) = epsilon * h_row(8) + (( 1.d0 - epsilon ) * h_row(7)
+     >             +h_row(6)+h_row(5))
 
 *.....Calculate y using x(j) = j
 *     That is, the true value of x(j) is j.
