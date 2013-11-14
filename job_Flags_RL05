@@ -7,9 +7,9 @@
 #$ -e Flags_RL05.err.$JOB_ID
 #$ -V                           # Inherit the submission environment
 #$ -cwd                         # Start job in submission directory
-#$ -pe 1way 1
+#$ -pe 12way 12
 #$ -l h_rt=01:00:00
-#$ -q grace-serial
+#$ -q normal
 
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ JOBID=${JOB_ID}
 
 
 # Set case, variation, and other variables.
-case=n109
+case=RL05_12-08
 variation=a
 ED_QFLG_67=NONE
 ED_QFLG_67=NSIG     # Used in RL04 for 2002 - May 2003.
@@ -79,7 +79,7 @@ ED_QFLG_67=ALL      # Use in RL05 for months after May 2003.
 
 BIN=${BINX}
 UTIL=~byaa705/util
-Disk=/corral-tacc/utexas/csr
+Disk=$WORK/..
 A_grav=${Disk}/${USER}/grace/grav
 W_grav=${SCRATCH}/grav
 A_VARIATION=${A_grav}/${case}/${variation}
@@ -109,6 +109,7 @@ ${BIN}/Flags_RL05   -case               ${case}                         \
                     -util               ${UTIL}                         \
                     -w_grav             ${W_grav}                       \
                     -ed_qflg_67         ${ED_QFLG_67}                   \
+                    -uidx               NONE 			                \
                     -LEAPDAT            ~byab343/LEAPDAT                \
 
 
