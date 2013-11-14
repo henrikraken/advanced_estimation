@@ -1,0 +1,138 @@
+#!/bin/bash
+
+#$ -S /bin/bash
+#$ -N Obs_RL05                  # Job name
+#$ -j n                         # stdout and stderr to different files
+#$ -o Obs_RL05.out.$JOB_ID
+#$ -e Obs_RL05.err.$JOB_ID
+#$ -V                           # Inherit the submission environment
+#$ -cwd                         # Start job in submission directory
+#$ -pe 1way 1
+#$ -l h_rt=01:00:00
+#$ -q grace-serial
+
+
+#-----------------------------------------------------------------------------------------------------------------------
+# History:
+#
+# 10/20/2010  Steve Poole
+# Use full path name in all commands.
+# Added BINX variable.
+#
+# 01/28/2011  Steve Poole
+# Change headers for grace machine.
+# Add jobdeckname variable.
+#
+# 04/28/2011  Steve Poole
+# Remove the module load mkl/10.2.2.025 command.
+# With the new mkl 10.3, no need to load the mkl module in the job deck.
+#
+# 01/10/2012  Steve Poole
+# Changed awk_field_obs to -3 in order to get the ID by counting fields backward from the end of the file name.
+#
+# 03/22/2012  Steve Poole
+# First RL05 version.
+#
+#-----------------------------------------------------------------------------------------------------------------------
+
+
+date
+set -exv -o pipefail
+
+jobdeckname=job_Obs_RL05
+
+# The default font for gnuplot is not installed on lonestar.
+# Set one.  Use a dir on home so that compute nodes can see it.
+GDFONTPATH=~byaa705/fonts/bitstream-vera
+GNUPLOT_DEFAULT_GDFONT=Vera.ttf
+export GDFONTPATH GNUPLOT_DEFAULT_GDFONT
+
+# Set BINX to the dir containing all scripts and executables.
+BINX=~byaa705/bin
+export BINX
+
+# Use the latest version of gnuplot to prevent it from aborting if it encounters an empty file.
+module load gnuplot
+
+
+
+JOBID=${JOB_ID}
+
+
+
+
+# Set case, variation, and other variables.
+case=n109
+variation=a
+ED_QFLG_67=NONE
+ED_QFLG_67=NSIG     # Used in RL04 for 2002 - May 2003.
+ED_QFLG_67=SHORT    # Use in RL05 for 2002 - May 2003.
+ED_QFLG_67=ALL      # Use in RL05 for months after May 2003.
+
+
+
+
+BIN=${BINX}
+UTIL=~byaa705/util
+Disk=/corral-tacc/utexas/csr
+A_grav=${Disk}/${USER}/grace/grav
+W_grav=${SCRATCH}/grav
+A_VARIATION=${A_grav}/${case}/${variation}
+W_VARIATION=${W_grav}/${case}/${variation}
+
+
+
+
+# Make a copy of this job deck with JOBID appended.
+mkdir -p ${W_VARIATION}
+cp ${SGE_CWD_PATH}/${jobdeckname} ${W_VARIATION}/${jobdeckname}.${JOBID}
+${BIN}/smartcopy -remote TO -overwrite YES -f -mkdir ${SGE_CWD_PATH}/${jobdeckname} ${A_VARIATION}/${jobdeckname}.${JOBID}
+
+
+
+
+${BIN}/Obs_RL05 -case               ${case}                                                 \
+                -variation          ${variation}                                            \
+                -jobid              ${JOBID}                                                \
+                -a_grav             ${A_grav}                                               \
+                -a_obsfiles         ${A_VARIATION}/krr.obs.files                            \
+                -awk_field_obs      -3                                                      \
+                -awk_fs_obs         "."                                                     \
+                -bin                ${BIN}                                                  \
+                -copy_obs           TRUE                                                    \
+                -current_name       iter                                                    \
+                -disk               ${Disk}                                                 \
+                -ed_qflg_1          TRUE                                                    \
+                -ed_qflg_2          TRUE                                                    \
+                -ed_qflg_2_span     40                                                      \
+                -ed_qflg_2_gap      300                                                     \
+                -ed_qflg_67         ${ED_QFLG_67}                                           \
+                -ed_qflg_67_span    600                                                     \
+                -ed_qflg_67_nsig    0                                                       \
+                -ed_qflg_67_gap     100                                                     \
+                -plot_prefit        TRUE                                                    \
+                -plot_prefit2       TRUE                                                    \
+                -plot_qflg          TRUE                                                    \
+                -util               ${UTIL}                                                 \
+                -w_grav             ${W_grav}                                               \
+                -year               AUTOSET                                                 \
+                -month              AUTOSET                                                 \
+                -WWW_server         csrserv.csr.utexas.edu                                  \
+                -WWW_user           nagel                                                   \
+                -WWW_grav           /var/www/html/csr/internal/projects/grace/orbits/grav   \
+
+
+
+
+
+# Make a copy of out and err files.
+cd ${SGE_CWD_PATH}
+${BIN}/smartcopy -remote TO -overwrite YES -d -mkdir ${SGE_STDOUT_PATH} ${SGE_STDERR_PATH} ${A_VARIATION}
+
+
+
+${BIN}/message -i "End Of Job"
+
+date
+
+# vim:tw=120
