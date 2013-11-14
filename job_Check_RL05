@@ -1,0 +1,119 @@
+#!/bin/bash
+
+#$ -S /bin/bash
+#$ -N Check_RL05                # Job name
+#$ -j n                         # stdout and stderr to different files
+#$ -o Check_RL05.out.$JOB_ID
+#$ -e Check_RL05.err.$JOB_ID
+#$ -V                           # Inherit the submission environment
+#$ -cwd                         # Start job in submission directory
+#$ -pe 1way 1
+#$ -l h_rt=01:00:00
+#$ -q grace-serial
+
+
+#-----------------------------------------------------------------------------------------------------------------------
+# History:
+#
+# 03/21/2012  Steve Poole
+# Created
+#
+#-----------------------------------------------------------------------------------------------------------------------
+
+
+date
+set -exv -o pipefail
+
+jobdeckname=job_Check_RL05
+
+# The default font for gnuplot is not installed on lonestar.
+# Set one.  Use a dir on home so that compute nodes can see it.
+GDFONTPATH=~byaa705/fonts/bitstream-vera
+GNUPLOT_DEFAULT_GDFONT=Vera.ttf
+export GDFONTPATH GNUPLOT_DEFAULT_GDFONT
+
+# Set BINX to the dir containing all scripts and executables.
+BINX=~byaa705/bin
+export BINX
+
+# Use the latest version of gnuplot to prevent it from aborting if it encounters an empty file.
+module load gnuplot
+
+
+
+
+JOBID=${JOB_ID}
+
+
+
+
+# Set case, variation, and other variables.
+case=RL05_05-01
+variation=a
+ED_QFLG_67=NONE
+ED_QFLG_67=NSIG     # Used in RL04 for 2002 - May 2003.
+ED_QFLG_67=SHORT    # Use in RL05 for 2002 - May 2003.
+ED_QFLG_67=ALL      # Use in RL05 for months after May 2003.
+
+
+
+
+
+BIN=${BINX}
+UTIL=~byaa705/util
+Disk=/corral-tacc/utexas/csr
+A_grav=${Disk}/${USER}/grace/grav
+W_grav=${SCRATCH}/grav
+A_VARIATION=${A_grav}/${case}/${variation}
+W_VARIATION=${W_grav}/${case}/${variation}
+
+
+
+
+# Make a copy of this job deck with JOBID appended.
+mkdir -p ${W_VARIATION}
+cp ${SGE_CWD_PATH}/${jobdeckname} ${W_VARIATION}/${jobdeckname}.${JOBID}
+${BIN}/smartcopy -remote TO -overwrite YES -f -mkdir ${SGE_CWD_PATH}/${jobdeckname} ${A_VARIATION}/${jobdeckname}.${JOBID}
+
+
+
+
+${BIN}/Check_RL05   -case               ${case}                                                 \
+                    -variation          ${variation}                                            \
+                    -jobid              ${JOBID}                                                \
+                    -a_grav             ${A_grav}                                               \
+                    -a_obsfiles         ${A_VARIATION}/krr.obs.files                            \
+                    -awk_field_obs      -3                                                      \
+                    -awk_fs_obs         "."                                                     \
+                    -bin                ${BIN}                                                  \
+                    -current_name       iter                                                    \
+                    -disk               ${Disk}                                                 \
+                    -util               ${UTIL}                                                 \
+                    -w_grav             ${W_grav}                                               \
+                    -ed_qflg_67         ${ED_QFLG_67}                                           \
+                    -plot_latlon        TRUE                                                    \
+                    -EOPDAT             ~byab343/EOPDAT                                         \
+                    -EPHDAT             ~byab343/EPHDAT                                         \
+                    -EMORBDIR           /corral-tacc/utexas/csr/grace                           \
+                    -SHORELINE_DATA     ${UTIL}/Shoreline_Data.txt                              \
+                    -WWW_server         csrserv.csr.utexas.edu                                  \
+                    -WWW_user           nagel                                                   \
+                    -WWW_grav           /var/www/html/csr/internal/projects/grace/orbits/grav   \
+                    -r                  UseHighestRL
+
+
+
+
+
+
+
+# Make a copy of out and err files.
+cd ${SGE_CWD_PATH}
+${BIN}/smartcopy -remote TO -overwrite YES -d -mkdir ${SGE_STDOUT_PATH} ${SGE_STDERR_PATH} ${A_VARIATION}
+
+
+${BIN}/message -i "End Of Job"
+
+date
+
+# vim:tw=120
