@@ -20,9 +20,9 @@ date
 
 
 # Set these block sizes to what you find are best.
-mblock=10
-nblock_chol_blas3=10
-nblock_house_blas3=10
+mblock=100
+nblock_chol_blas3=40
+nblock_house_blas3=30
 
 # Small case
 n_small=1800
